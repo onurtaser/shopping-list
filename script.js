@@ -4,7 +4,12 @@ const form = document.getElementById("item-form");
 const clearBtn = document.getElementById("clear");
 const filter = document.getElementById("filter");
 
+function displayItems() {
+    const itemsFromStorage = getItemsFromStorage();
 
+    itemsFromStorage.forEach(item => addItemToDOM(item));
+    resetUI();
+}
 
 function onAddItemSubmit(e) {
     e.preventDefault();
@@ -34,20 +39,6 @@ function addItemToDOM(item) {
     itemList.appendChild(li);
 }
 
-function addItemToLocalStorage(item){
-    let itemsInLocalStorage;
-
-    if(localStorage.getItem("items") === null) {
-        itemsInLocalStorage = [];
-    } else {
-        itemsInLocalStorage = JSON.parse(localStorage.getItem("items"));
-    }
-
-    itemsInLocalStorage.push(item);
-
-    localStorage.setItem("items", JSON.stringify(itemsInLocalStorage));
-}
-
 function createButton(classes) {
 
     const button = document.createElement("button");
@@ -63,6 +54,26 @@ function createIcon(classes) {
     const icon = document.createElement("i");
     icon.classList = classes;
     return icon;
+}
+
+function addItemToLocalStorage(item){
+    let itemsInLocalStorage = getItemsFromStorage();
+
+    itemsInLocalStorage.push(item);
+
+    localStorage.setItem("items", JSON.stringify(itemsInLocalStorage));
+}
+
+function getItemsFromStorage() {
+    let itemsInLocalStorage;
+
+    if(localStorage.getItem("items") === null) {
+        itemsInLocalStorage = [];
+    } else {
+        itemsInLocalStorage = JSON.parse(localStorage.getItem("items"));
+    }
+
+    return itemsInLocalStorage;
 }
 
 function removeItem(e) {
@@ -111,10 +122,17 @@ function resetUI() {
 
 }
 
-form.addEventListener("submit", onAddItemSubmit);
-itemList.addEventListener("click", removeItem);
-clearBtn.addEventListener("click", clearItems);
-filter.addEventListener("input", filterItems);
+function init() {
+
+    form.addEventListener("submit", onAddItemSubmit);
+    itemList.addEventListener("click", removeItem);
+    clearBtn.addEventListener("click", clearItems);
+    filter.addEventListener("input", filterItems);
+    document.addEventListener("DOMContentLoaded", displayItems);
+
+    resetUI();
+}
+
+init();
 
 
-resetUI();
