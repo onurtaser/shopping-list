@@ -6,7 +6,7 @@ const filter = document.getElementById("filter");
 
 
 
-function addItem(e) {
+function onAddItemSubmit(e) {
     e.preventDefault();
 
     const newItem = itemInput.value;
@@ -16,15 +16,36 @@ function addItem(e) {
         return;
     }
 
+    addItemToDOM(newItem);
+    addItemToLocalStorage(newItem);
+
+    resetUI();
+    itemInput.value = "";
+
+}
+
+function addItemToDOM(item) {
+
     const li = document.createElement("li");
-    li.appendChild(document.createTextNode(newItem));
+    li.appendChild(document.createTextNode(item));
     const button = createButton("remove-item btn-link text-red");
     li.appendChild(button);
 
     itemList.appendChild(li);
-    resetUI();
-    itemInput.value = "";
+}
 
+function addItemToLocalStorage(item){
+    let itemsInLocalStorage;
+
+    if(localStorage.getItem("items") === null) {
+        itemsInLocalStorage = [];
+    } else {
+        itemsInLocalStorage = JSON.parse(localStorage.getItem("items"));
+    }
+
+    itemsInLocalStorage.push(item);
+
+    localStorage.setItem("items", JSON.stringify(itemsInLocalStorage));
 }
 
 function createButton(classes) {
@@ -90,7 +111,7 @@ function resetUI() {
 
 }
 
-form.addEventListener("submit", addItem);
+form.addEventListener("submit", onAddItemSubmit);
 itemList.addEventListener("click", removeItem);
 clearBtn.addEventListener("click", clearItems);
 filter.addEventListener("input", filterItems);
