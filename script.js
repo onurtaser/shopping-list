@@ -23,6 +23,14 @@ function onAddItemSubmit(e) {
         return;
     }
 
+    if(isSetItem){
+        const itemToEdit = itemList.querySelector(".edit-mode");
+        removeItemFromStorage(itemToEdit.textContent);
+        itemToEdit.remove();
+
+        isSetItem = false;
+    }
+
     addItemToDOM(newItem);
     addItemToLocalStorage(newItem);
 
@@ -147,6 +155,9 @@ function filterItems(e) {
 }
 
 function resetUI() {
+
+    itemInput.value = "";
+
     const items = itemList.querySelectorAll("li");
 
     if(items.length === 0){
@@ -157,6 +168,10 @@ function resetUI() {
         clearBtn.style.display = "block";
     }
 
+    formBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Item'
+    formBtn.style.backgroundColor = "#333";
+
+    isEditMode = false;
 }
 
 function init() {
