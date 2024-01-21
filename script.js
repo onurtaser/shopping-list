@@ -29,6 +29,12 @@ function onAddItemSubmit(e) {
         itemToEdit.remove();
 
         isSetItem = false;
+    } else {
+        if(checkIfItemExists(newItem)) {
+            alert("That item does exist.");
+            itemInput.value = "";
+            return;
+        }
     }
 
     addItemToDOM(newItem);
@@ -93,6 +99,13 @@ function onClickItem(e) {
         
         setItemToEdit(e.target);
     }
+}
+
+function checkIfItemExists(item) {
+
+    const itemsFromStorage = getItemsFromStorage();
+    return itemsFromStorage.includes(item);
+
 }
 
 function setItemToEdit(item) {
